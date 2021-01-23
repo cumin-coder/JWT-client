@@ -13,17 +13,14 @@ Vue.use(ElementUI);
 // axios 请求拦截器处理请求数据
 axios.interceptors.request.use(config => {
   const token = localStorage.getItem('token');
-  config.headers.common['Authorization'] = 'Bearer ' + token;
-  console.log(config)
+  config.headers.common['Authorization'] = 'Bearer ' + token; // 留意这里的 Authorization
   return config;
 })
 
 // axios 响应拦截器处理响应数据
 axios.interceptors.response.use(res => {
-  console.log('res', res.status === 401)
   return res.data;
 }, err => {
-  console.log('err,', err)
   return Promise.reject(err);
 })
 
