@@ -1,17 +1,30 @@
 <template>
   <div class="login-container">
-    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form
+      :model="ruleForm"
+      status-icon
+      :rules="rules"
+      ref="ruleForm"
+      label-width="100px"
+      class="demo-ruleForm"
+    >
       <el-form-item label="用户名" prop="name">
         <el-input v-model.number="ruleForm.name"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
+        <el-input
+          type="password"
+          v-model="ruleForm.password"
+          autocomplete="off"
+        ></el-input>
       </el-form-item>
       <el-form-item class="login-btn">
         <el-button v-if="isLogin" type="primary" @click="login">登录</el-button>
         <el-button v-else type="primary" @click="register">注册</el-button>
       </el-form-item>
-      <span class="trigger-text" @click="trigger">{{ isLogin ? '去注册吧~' : '去登录吧~' }}</span>
+      <span class="trigger-text" @click="trigger">{{
+        isLogin ? "去注册吧~" : "去登录吧~"
+      }}</span>
     </el-form>
   </div>
 </template>
@@ -36,29 +49,35 @@ export default {
     trigger() {
       this.isLogin = !this.isLogin;
     },
+    // 注册
     register() {
       this.$axios
         .post("/api/register", {
           ...this.ruleForm,
         })
-        .then(res => {
+        .then((res) => {
           if (res.code === "0") {
-            this.$message.success('注册成功啦~快去登录吧');
+            this.$message.success("注册成功啦~快去登录吧");
           } else {
             this.$message(res.message);
           }
-        }).catch(() => {});
+        })
+        .catch(() => {});
     },
+    // 登录
     login() {
       this.$axios
         .post("/api/login", {
           ...this.ruleForm,
         })
-        .then(res => {
+        .then((res) => {
+          console.log(res);
           if (res.code === "0") {
-            this.$message.success('登录成功');
-            localStorage.setItem("token", res.data.token);
-            this.$router.push("/");
+            this.$message.success("登录成功");
+            // 设置 Cookie
+            this.$cookie.set("token", res.data.token);
+
+            this.$router.push("/HelloWorld");
           } else {
             this.$message(res.message);
           }

@@ -5,6 +5,8 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui';
 import axios from 'axios';
+import cookie from 'js-cookie'
+
 import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.config.productionTip = false
@@ -12,8 +14,8 @@ Vue.use(ElementUI);
 
 // axios 请求拦截器处理请求数据
 axios.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  config.headers.common['Authorization'] = 'Bearer ' + token; // 留意这里的 Authorization
+  const token = cookie.get('token');
+  config.headers['Authorization'] = 'Bearer ' + token; // 留意这里的 Authorization
   return config;
 })
 
@@ -24,13 +26,14 @@ axios.interceptors.response.use(res => {
   return Promise.reject(err);
 })
 
+
 Vue.prototype.$axios = axios;
+Vue.prototype.$cookie = cookie
 
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
   router,
   components: { App },
   template: '<App/>'
-})
+}).$mount('#app')

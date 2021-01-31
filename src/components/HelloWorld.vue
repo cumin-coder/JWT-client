@@ -17,7 +17,6 @@ export default {
       this.$axios
         .get("/api/info")
         .then(res => {
-          console.log('1233')
           if (res.code === "0") {
             this.$message.success('成功请求到首页数据啦');
           } else {

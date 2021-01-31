@@ -2,36 +2,45 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login'
+import $cookie from 'js-cookie'
 
 Vue.use(Router)
 
-const router =  new Router({
+const router = new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
-      meta: {requireAuth: true}
+      redirect: '/login'
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login,
-      meta: {requireAuth: false}
+      component: Login
+    },
+    {
+      path: '/HelloWorld',
+      name: 'HelloWorld',
+      component: HelloWorld
     }
   ]
 })
 export default router;
 
+
 router.beforeEach((to, from, next) => {
-	if (to.meta.requireAuth) {
-		const token = localStorage.getItem('token');
-		if (token) {
-			next();
-		} else {
-			next('/login');
-		}
-	} else {
-		next();
-	}
+  // 获取 cookie
+  const token = $cookie.get('token')
+  
+  if (to.path === '/login' && token) {
+    next('/HelloWorld')
+  } else {
+    next()
+  }
+
+  if (to.path === '/HelloWorld' && !token) {
+    next('/login')
+  }
+
+  next()
 })
